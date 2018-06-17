@@ -2,6 +2,7 @@ import initContract from 'truffle-contract'
 
 const getContract = async (web3, contractDefinition) => {
   const contract = initContract(contractDefinition)
+  console.log(web3.currentProvider)
   contract.setProvider(web3.currentProvider)
 
   // Dirty hack for web3@1.0.0 support for localhost testrpc
@@ -13,8 +14,10 @@ const getContract = async (web3, contractDefinition) => {
       )
     }
   }
-
-  const instance = await contract.deployed()
+  // Create contract on local environment
+  //const instance = await contract.deployed()
+  // Get contract from an address
+  const instance = await contract.at("0x43f85028cf8aa7c85e715a91ceec99701320b9de")
   return instance
 }
 

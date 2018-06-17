@@ -116,7 +116,7 @@ contract Etherball is Ownable {
 
     event Prize(uint256 _prize, address _winner);
 
-    
+
 
     constructor(uint256 _deadline, address _owner, uint256 _number) public {
         owner = _owner;
@@ -124,6 +124,32 @@ contract Etherball is Ownable {
         number = _number;
     }
 
+    // Getters
+    function getStart() view public returns(uint) {
+        return startTime;
+    }
+
+    function getDeadline() view public returns(uint) {
+        return deadline;
+    }
+
+    function getPlaying() view public returns(uint) {
+        return playing;
+    }
+
+    function getPrize() view public returns(uint256) {
+        return prize;
+    }
+
+    function getWinner() view public returns(address) {
+        return winner;
+    }
+
+    function getPlayer() view public returns(address[]) {
+        return players;
+    }
+
+    // Methods
     function startGame(address _owner, uint256 _deadline, uint256 _number) onlyOwner public {
         owner = _owner;
         startTime = now;
@@ -131,14 +157,6 @@ contract Etherball is Ownable {
         number = _number;
         emit Game(deadline, owner, startTime);
     }
-
-
-    function getStart() view public returns(uint) {
-        return startTime;
-    }
-
-
-
 
     function guess(uint256 _guess) payable returns (string) {
 
