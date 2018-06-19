@@ -2,6 +2,7 @@ import React from 'react'
 import Link from 'next/link'
 import Web3Container from '../lib/Web3Container'
 import Countdown from './components/Countdown.js'
+import getContract from '../lib/getContract';
 
 
 
@@ -21,6 +22,10 @@ class Dapp extends React.Component {
     var playerEvent = contract.Players();
     var prizeEvent = contract.Prize();
 
+    this.getDeadline()
+    this.getPrize();
+    this.getPlaying();
+    this.getPlayer();
 
     gameEvent.watch((error, result) => {
       if(!error) {this.setState({
@@ -53,45 +58,56 @@ class Dapp extends React.Component {
 
   }
 
-  storeValue = async () => {
+  guess = async () => {
     const { accounts, contract } = this.props
-    await contract.set(5, { from: accounts[0] })
+    await contract.guess(5, { from: accounts[0] })
     alert('Stored 5 into account')
   }
 
-  getValue = async () => {
+  getDeadline = async () => {
     const { accounts, contract } = this.props
-    const response = await contract.get.call({ from: accounts[0] })
-    this.setState({ balance: response.toNumber() })
+    const response = await contract.deadline.call({ from: accounts[0] })
+    this.setState({ deadline: response.toNumber() })
   }
 
-  getStart = async () => {
-    const {accounts, contract} = this.props
-    const response = await contract.getStart.call({ from: accounts[0] })
-    this.setState({ balance: response.toNumber() })
+  getPrize = async () => {
+    const { accounts, contract } = this.props
+    const balanceInWei = await contract.prize.call({ from: accounts[0] })
+    this.setState({ prize: balanceInWei / 1e18 })
   }
 
-  getEthBalance = async () => {
-    const { web3, accounts } = this.props
-    const balanceInWei = await web3.eth.getBalance(accounts[0])
-    this.setState({ ethBalance: balanceInWei / 1e18 })
+  getPlaying = async () => {
+    const { accounts, contract } = this.props
+    const response = await contract.playing.call({ from: accounts[0] })
+    this.setState({ playing: response.toNumber() })
   }
 
+  getPlayer = async () => {
+    const { accounts, contract } = this.props
+    const response = await getContract.players[0].call({ from : accounts[0] })
+    this.setState({ players: response })
+  }
+
+  getWinner = async () => {
+    const { accounts, contract } = this.props
+    const response = await getContract.winner.call({ from : accounts[0] })
+    this.setState({ winner: response })
+  }
 
 
   render () {
-    const { balance = 'N/A', ethBalance = "N/A" } = this.state
     return (
       <div>
         <Countdown date={this.state.deadline} />
         <h1>Etherball</h1>
         <h1>The way to become ethereum whale</h1>
         <h1>One Winner, One Number</h1>
-        <h2>{this.state.prize}</h2>
-        <h2>{this.state.playing}</h2>
-        <h2>{this.state.players}</h2>
+        <h2>Prize:  <span>{this.state.prize}</span></h2>
+        <h2># of Players: <span>{this.state.playing}</span></h2>
+        <h2>Last winner: <span>{this.state.winner}</span></h2>
+        <h2>{Date(this.state.deadline)}</h2>
         <input></input>
-        <button onClick={this.storeValue}>Guess the number</button>
+        <button onClick={this.guess}>Guess the number</button>
         <div><Link href='/'><a>Home</a></Link></div>
       </div>
     )

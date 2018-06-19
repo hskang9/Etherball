@@ -5,6 +5,7 @@ class Countdown extends Component {
   constructor(props) {
     super(props);
 
+
     this.state = {
       days: 0,
       hours: 0,
@@ -25,8 +26,8 @@ class Countdown extends Component {
     this.stop();
   }
 
-  calculateCountdown(endTime) {
-    let diff = (endTime - Date.now()) / 1000;
+  calculateCountdown(endDate) {
+    let diff = (endDate*1000 - Date.now()) / 1000;
 
     // clear countdown when date is reached
     if (diff <= 0) return false;
@@ -95,7 +96,7 @@ class Countdown extends Component {
          display: inline-block;
          margin: 0 20px;
          display: flex;
-         flex-direction: column; 
+         flex-direction: column;
       }
 
       .Countdown-col-element strong{
@@ -136,11 +137,8 @@ class Countdown extends Component {
 }
 
 Countdown.propTypes = {
-  date: PropTypes.string.isRequired
+  date: PropTypes.number.isRequired
 };
 
-Countdown.defaultProps = {
-  date: new Date()
-};
 
 export default Countdown;
