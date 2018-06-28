@@ -10,11 +10,16 @@
     "link-contracts": "cd lib && ln -s ../../build/contracts contracts"
   },
   "dependencies": {
+    "bulma": "^0.7.1",
     "ethjs": "^0.4.0",
+    "jquery": "^3.3.1",
     "next": "^6.0.3",
+    "punycode": "^2.1.1",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
+    "react-input-component": "^0.1.0",
     "truffle-contract": "^3.0.5",
+    "typedarray-to-buffer": "^3.1.5",
     "web3": "^1.0.0-beta.34"
   }
 }

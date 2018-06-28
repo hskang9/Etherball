@@ -137,7 +137,7 @@ class Countdown extends Component {
 }
 
 Countdown.propTypes = {
-  date: PropTypes.number.isRequired
+  date: PropTypes.string.isRequired
 };
 
 

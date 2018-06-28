@@ -5,16 +5,23 @@ import Countdown from './components/Countdown.js'
 import getContract from '../lib/getContract';
 
 
-
 class Dapp extends React.Component {
-  state = {
-    winner: 'N/A',
-    prize: 'N/A',
-    deadline: 'N/A',
-    playing: 'N/A',
-    players: 'N/A'
+  constructor(props) {
+    super(props);
 
+    this.state = {
+      winner: 'N/A',
+      prize: 'N/A',
+      deadline: 'N/A',
+      playing: 'N/A',
+      players: 'N/A',
+      value: 0
+    }
+
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
+
 
   componentDidMount() {
     const {contract} = this.props
@@ -58,15 +65,25 @@ class Dapp extends React.Component {
 
   }
 
-  guess = async () => {
-    const { accounts, contract } = this.props
-    await contract.guess(5, { from: accounts[0] })
-    alert('Stored 5 into account')
+  handleChange(event) {
+    this.setState({value: parseInt(event.target.value)});
+    console.log(this.state.value)
   }
+
+  handleSubmit(event) {
+    alert('The number has been thrown: ' + this.state.value);
+    const { accounts, contract } = this.props
+    contract.guess.sendTransaction(this.state.value, {from: accounts[0], value: web3.toWei('0.001', 'ether')})
+    alert('Number is thrown')
+    event.preventDefault();
+  }
+
+
+
 
   getDeadline = async () => {
     const { accounts, contract } = this.props
-    const response = await contract.deadline.call({ from: accounts[0] })
+    const response = await contract.deadline.call()
     this.setState({ deadline: response.toNumber() })
   }
 
@@ -84,7 +101,7 @@ class Dapp extends React.Component {
 
   getPlayer = async () => {
     const { accounts, contract } = this.props
-    const response = await getContract.players[0].call({ from : accounts[0] })
+    const response = await getContract.players.call({ from : accounts[0] })
     this.setState({ players: response })
   }
 
@@ -106,8 +123,13 @@ class Dapp extends React.Component {
         <h2># of Players: <span>{this.state.playing}</span></h2>
         <h2>Last winner: <span>{this.state.winner}</span></h2>
         <h2>{Date(this.state.deadline)}</h2>
-        <input></input>
-        <button onClick={this.guess}>Guess the number</button>
+        <form onSubmit={this.handleSubmit}>
+        <label>
+          Number:
+          <input type="text" value={this.state.value} required onChange={this.handleChange} />
+        </label>
+        <input type="submit" value="Submit" />
+        </form>
         <div><Link href='/'><a>Home</a></Link></div>
       </div>
     )
