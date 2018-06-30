@@ -79,12 +79,12 @@ class Countdown extends Component {
     const countDown = this.state;
 
     return (
-      <div className="Countdown">
+      <div className="Countdown box">
       <style jsx>{`
       .Countdown{
          margin: 10px auto;
          padding-bottom: 20px;
-         background-color: purple;
+         background-color: white;
          text-align: center;
       }
 
@@ -103,9 +103,10 @@ class Countdown extends Component {
          font-size: 50px;
       }
       `}</style>
+      <h1> Time left:</h1>
         <span className="Countdown-col">
           <span className="Countdown-col-element">
-              <strong>{this.addLeadingZeros(countDown.days)}</strong>
+              <strong >{this.addLeadingZeros(countDown.days)}</strong>
               <span>{countDown.days === 1 ? 'Day' : 'Days'}</span>
           </span>
         </span>
@@ -137,7 +138,7 @@ class Countdown extends Component {
 }
 
 Countdown.propTypes = {
-  date: PropTypes.string.isRequired
+  date: PropTypes.number.isRequired || PropTypes.strring.isRequired
 };
 
 
